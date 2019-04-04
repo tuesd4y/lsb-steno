@@ -4,6 +4,8 @@ import image.Pixel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
@@ -13,7 +15,7 @@ public class LsbEncoder implements Encoder {
     Consumer<Boolean> applyAfterWrite = null;
 
     @Override
-    public BufferedImage encode(byte[] data, Image image) throws MessageTooLongException {
+    public BufferedImage encode(byte[] data, BufferedImage image) throws MessageTooLongException {
         BufferedImage bi = copyImage(image);
 
         // compute how much bytes we need to encode the data
@@ -80,12 +82,16 @@ public class LsbEncoder implements Encoder {
         return Pixel.generateRGBAPixel(setLsb(r, lsbR), setLsb(g, lsbG), setLsb(b, lsbB), alpha);
     }
 
-    private BufferedImage copyImage(Image source) {
-        final BufferedImage b = new BufferedImage(source.getWidth(null), source.getHeight(null),
-                BufferedImage.TYPE_INT_ARGB);
-        final Graphics g = b.getGraphics();
-        g.drawImage(source, 0, 0, null);
-        g.dispose();
-        return b;
+    private BufferedImage copyImage(BufferedImage source) {
+//        final BufferedImage b = new BufferedImage(source.getWidth(null), source.getHeight(null),
+//                BufferedImage.TYPE_INT_ARGB);
+//        final Graphics g = b.getGraphics();
+//        g.drawImage(source, 0, 0, null);
+//        g.dispose();
+//        return b;
+        ColorModel cm = source.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = source.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 }

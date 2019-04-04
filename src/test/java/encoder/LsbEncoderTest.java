@@ -4,6 +4,8 @@ import image.Pixel;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -71,5 +73,37 @@ public class LsbEncoderTest {
                 assertThat("Problem at position " + i, writtenBytes[i], is(bytes[i - info.length]));
             }
         }
+    }
+
+    @Test
+    public void writeAndReadImage() throws IOException, MessageTooLongException {
+        final String text = "Testtext";
+        final byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+        final int length = bytes.length;
+
+        final String sizeString = String.format("%d;", length);
+        final byte[] info = sizeString.getBytes(StandardCharsets.UTF_8);
+
+        System.out.println(Integer.toBinaryString(info[0]));
+        final BufferedImage toEncode = ImageIO.read(getClass().getResourceAsStream("/image.jpg"));
+        final BufferedImage result = encoder.encode(bytes, toEncode);
+        ImageIO.write(result, "jpg", new File("/Users/dev/Desktop/img2.jpg"));
+        for (int i = 0; i < 11 * 10; i++) {
+            int oldPixel = toEncode.getRGB(i % 10, i /10);
+            int newPixel = result.getRGB(i % 10, i /10);
+
+//                p(Pixel.getRed(oldPixel));
+                p(Pixel.getRed(newPixel));
+//                p(Pixel.getGreen(oldPixel));
+                p(Pixel.getGreen(newPixel));
+//                p(Pixel.getBlue(oldPixel));
+                p(Pixel.getBlue(newPixel));
+                System.out.println("---");
+        }
+        System.out.println("abc");
+    }
+
+    private void p(int s) {
+        System.out.println(Integer.toBinaryString(s));
     }
 }
