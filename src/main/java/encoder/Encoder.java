@@ -1,7 +1,6 @@
 package encoder;
 
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

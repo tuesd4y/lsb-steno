@@ -13,8 +13,8 @@ public class LsbTest {
 
         final BufferedImage image = ImageIO.read(LsbTest.class.getResourceAsStream("/WhatsApp Image 2019-03-27 at 15.37.19.jpeg"));
         final BufferedImage encoded = encoder.encode("Testtext", image);
-        final File tempFile = File.createTempFile("nothing_", ".jpg");
-        ImageIO.write(encoded, "jpg", tempFile);
+        final File tempFile = File.createTempFile("nothing_", ".png");
+        ImageIO.write(encoded, "png", tempFile);
         System.out.println(tempFile.getAbsoluteFile());
 
         final byte[] decoded = decoder.decode(encoded);

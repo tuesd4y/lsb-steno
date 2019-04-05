@@ -1,6 +1,5 @@
 package image;
 
-import encoder.LsbDecoder;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -29,7 +28,7 @@ public class EncodedImageTest {
         int g = image.getColor(1);
         int b = image.getColor(2);
 
-        int pixel = bi.getRGB(0,0);
+        int pixel = bi.getRGB(0, 0);
         System.out.println(Integer.toBinaryString(pixel));
 
         assertThat(r, is(Pixel.getRed(pixel)));

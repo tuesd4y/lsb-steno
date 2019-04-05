@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -80,51 +79,25 @@ public class LsbEncoderTest {
     @Test
     public void writeAndReadImage() throws IOException, MessageTooLongException {
         // defining stuff to encode
-        final String text = "Testtext";
-        final byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-        final int length = bytes.length;
-
-        final String sizeString = String.format("%d;", length);
-        final byte[] info = sizeString.getBytes(StandardCharsets.UTF_8);
+        final String text = "Testtextü";
 
         // do the encoding
         final BufferedImage toEncode = ImageIO.read(getClass().getResourceAsStream("/image.jpg"));
         final BufferedImage result = encoder.encode(text, toEncode);
-        ImageIO.write(result, "png", new File("/Users/dev/Desktop/img2.png"));
-
-//        for (int i = 0; i < 11 * 10; i++) {
-//            int oldPixel = toEncode.getRGB(i % 10, i / 10);
-//            int newPixel = result.getRGB(i % 10, i / 10);
-//            int newlyReadPixel = decodingInput.getRGB(i % 10, i / 10);
-//
-////                p(Pixel.getRed(oldPixel));
-////                p(Pixel.getGreen(oldPixel));
-////                p(Pixel.getBlue(oldPixel));
-//            printPixel(newPixel);
-//            assertThat(newPixel, is(newlyReadPixel));
-//            System.out.println("---");
-//        }
-//        System.out.println("abc");
+        final File tempFile = File.createTempFile("test", ".png");
+        ImageIO.write(result, "png", tempFile);
 
         // testing the decoding
-        final BufferedImage decodingInput = ImageIO.read(new File("/Users/dev/Desktop/img2.png"));
+        final BufferedImage decodingInput = ImageIO.read(tempFile);
         final byte[] resultBytes = decoder.decode(decodingInput);
-        for (byte resultByte : resultBytes) {
-            System.out.printf("%c", resultByte);
-        }
-        System.out.println(resultBytes);
-        System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(resultBytes)));
-//        System.out.println(new String(resultBytes, StandardCharsets.UTF_8));
+
+        String res = new String(resultBytes);
+        assertThat(res, is(text));
     }
 
     @Test
     public void readImageTest() throws IOException {
-
-        printPixel(ImageIO.read(new File("/Users/dev/Desktop/img2.png")).getRGB(0, 0));
-    }
-
-    private void p(int s) {
-        System.out.println(Integer.toBinaryString(s));
+        printPixel(ImageIO.read(getClass().getResourceAsStream("/img2.png")).getRGB(0, 0));
     }
 
     public static void printPixel(int pixel) {
