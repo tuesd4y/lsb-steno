@@ -2,25 +2,42 @@ package encoder;
 
 import image.Pixel;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Consumer;
 
 import static encoder.ByteHelper.setLsb;
 
 public class LsbEncoder implements Encoder {
-    Consumer<Boolean> applyAfterWrite = null;
+
+    @Override
+    public BufferedImage encode(byte[] data, Charset charset, BufferedImage image) throws MessageTooLongException {
+        final BufferedImage copy = copyImage(image);
+        writeIntoImage(data, charset, copy);
+        return copy;
+    }
 
     @Override
     public BufferedImage encode(byte[] data, BufferedImage image) throws MessageTooLongException {
-        BufferedImage bi = copyImage(image);
+        return encode(data, StandardCharsets.UTF_8, image);
+    }
 
+    @Override
+    public BufferedImage encode(String text, Charset charset, BufferedImage image) throws MessageTooLongException {
+        return encode(text.getBytes(charset), charset, image);
+    }
+
+    @Override
+    public BufferedImage encode(String text, BufferedImage image) throws MessageTooLongException {
+        return encode(text, StandardCharsets.UTF_8, image);
+    }
+
+    private void writeIntoImage(byte[] data, Charset charset, BufferedImage bi) throws MessageTooLongException {
         // compute how much bytes we need to encode the data
         final String sizeString = String.format("%d;", data.length);
-        final byte[] info = sizeString.getBytes(StandardCharsets.UTF_8);
+        final byte[] info = sizeString.getBytes(charset);
 
         final int width = bi.getWidth();
         final int height = bi.getHeight();
@@ -50,8 +67,6 @@ public class LsbEncoder implements Encoder {
                 }
             }
         }
-
-        return bi;
     }
 
     int writeDataToPixel(byte[] data, int i, int pixel) {
@@ -73,22 +88,10 @@ public class LsbEncoder implements Encoder {
         int b = Pixel.getBlue(pixel);
         int alpha = Pixel.getAlpha(pixel);
 
-        if (applyAfterWrite != null) {
-            applyAfterWrite.accept(lsbR);
-            applyAfterWrite.accept(lsbG);
-            applyAfterWrite.accept(lsbB);
-        }
-
         return Pixel.generateRGBAPixel(setLsb(r, lsbR), setLsb(g, lsbG), setLsb(b, lsbB), alpha);
     }
 
     private BufferedImage copyImage(BufferedImage source) {
-//        final BufferedImage b = new BufferedImage(source.getWidth(null), source.getHeight(null),
-//                BufferedImage.TYPE_INT_ARGB);
-//        final Graphics g = b.getGraphics();
-//        g.drawImage(source, 0, 0, null);
-//        g.dispose();
-//        return b;
         ColorModel cm = source.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = source.copyData(null);

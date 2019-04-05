@@ -15,7 +15,7 @@ public class ByteHelperTest {
         };
 
         for (int i = 0; i < 8; i++) {
-            assertThat("Problem at position " + i, ByteHelper.getBitAtIndex(toTest, i), is(true));
+             assertThat("Problem at position " + i, ByteHelper.getBitAtIndex(toTest, i), is(true));
         }
         for (int i = 8; i < 16; i++) {
             assertThat("Problem at position " + i, ByteHelper.getBitAtIndex(toTest, i), is(i % 2 == 1));

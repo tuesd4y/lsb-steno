@@ -5,7 +5,7 @@ public class MessageTooLongException extends Exception {
         super();
     }
 
-    public MessageTooLongException(String message) {
+    MessageTooLongException(String message) {
         super(message);
     }
 }
