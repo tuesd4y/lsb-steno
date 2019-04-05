@@ -26,7 +26,7 @@ public class LsbDecoder implements Decoder {
 //
 //        return bytes;
 
-        return img.bytes();
+        return img.bytes2();
     }
 
 

@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,6 +20,7 @@ import static org.hamcrest.core.Is.is;
 public class LsbEncoderTest {
 
     private LsbEncoder encoder = new LsbEncoder();
+    private LsbDecoder decoder = new LsbDecoder();
 
     @Test
     public void writeDataToPixelTest() {
@@ -46,7 +48,7 @@ public class LsbEncoderTest {
         final String sizeString = String.format("%d;", length);
         final byte[] info = sizeString.getBytes(StandardCharsets.UTF_8);
 
-        final boolean[][] writtenData = new boolean[bytes.length + info.length+1][8];
+        final boolean[][] writtenData = new boolean[bytes.length + info.length + 1][8];
         AtomicInteger counter = new AtomicInteger();
         encoder.applyAfterWrite = b -> {
             writtenData[counter.get() / 8][counter.get() % 8] = b;
@@ -69,7 +71,7 @@ public class LsbEncoderTest {
         for (int i = 0; i < writtenBytes.length; i++) {
             if (i < info.length) {
                 assertThat("Problem at position " + i, writtenBytes[i], is(info[i]));
-            } else if(i < bytes.length) {
+            } else if (i < bytes.length) {
                 assertThat("Problem at position " + i, writtenBytes[i], is(bytes[i - info.length]));
             }
         }
@@ -77,6 +79,7 @@ public class LsbEncoderTest {
 
     @Test
     public void writeAndReadImage() throws IOException, MessageTooLongException {
+        // defining stuff to encode
         final String text = "Testtext";
         final byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
         final int length = bytes.length;
@@ -84,26 +87,53 @@ public class LsbEncoderTest {
         final String sizeString = String.format("%d;", length);
         final byte[] info = sizeString.getBytes(StandardCharsets.UTF_8);
 
-        System.out.println(Integer.toBinaryString(info[0]));
+        // do the encoding
         final BufferedImage toEncode = ImageIO.read(getClass().getResourceAsStream("/image.jpg"));
-        final BufferedImage result = encoder.encode(bytes, toEncode);
-        ImageIO.write(result, "jpg", new File("/Users/dev/Desktop/img2.jpg"));
-        for (int i = 0; i < 11 * 10; i++) {
-            int oldPixel = toEncode.getRGB(i % 10, i /10);
-            int newPixel = result.getRGB(i % 10, i /10);
+        final BufferedImage result = encoder.encode(text, toEncode);
+        ImageIO.write(result, "png", new File("/Users/dev/Desktop/img2.png"));
 
-//                p(Pixel.getRed(oldPixel));
-                p(Pixel.getRed(newPixel));
-//                p(Pixel.getGreen(oldPixel));
-                p(Pixel.getGreen(newPixel));
-//                p(Pixel.getBlue(oldPixel));
-                p(Pixel.getBlue(newPixel));
-                System.out.println("---");
+//        for (int i = 0; i < 11 * 10; i++) {
+//            int oldPixel = toEncode.getRGB(i % 10, i / 10);
+//            int newPixel = result.getRGB(i % 10, i / 10);
+//            int newlyReadPixel = decodingInput.getRGB(i % 10, i / 10);
+//
+////                p(Pixel.getRed(oldPixel));
+////                p(Pixel.getGreen(oldPixel));
+////                p(Pixel.getBlue(oldPixel));
+//            printPixel(newPixel);
+//            assertThat(newPixel, is(newlyReadPixel));
+//            System.out.println("---");
+//        }
+//        System.out.println("abc");
+
+        // testing the decoding
+        final BufferedImage decodingInput = ImageIO.read(new File("/Users/dev/Desktop/img2.png"));
+        final byte[] resultBytes = decoder.decode(decodingInput);
+        for (byte resultByte : resultBytes) {
+            System.out.printf("%c", resultByte);
         }
-        System.out.println("abc");
+        System.out.println(resultBytes);
+        System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(resultBytes)));
+//        System.out.println(new String(resultBytes, StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void readImageTest() throws IOException {
+
+        printPixel(ImageIO.read(new File("/Users/dev/Desktop/img2.png")).getRGB(0, 0));
     }
 
     private void p(int s) {
         System.out.println(Integer.toBinaryString(s));
+    }
+
+    public static void printPixel(int pixel) {
+        final int red = Pixel.getRed(pixel);
+        final int green = Pixel.getGreen(pixel);
+        final int blue = Pixel.getBlue(pixel);
+
+        System.out.printf("red: %3d - %s\n", red, Integer.toBinaryString(red));
+        System.out.printf("green: %3d - %s\n", green, Integer.toBinaryString(green));
+        System.out.printf("blue: %3d - %s\n", blue, Integer.toBinaryString(blue));
     }
 }
