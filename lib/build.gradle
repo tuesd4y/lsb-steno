@@ -1,0 +1,27 @@
+plugins {
+    id 'java-library'
+}
+
+archivesBaseName = 'lsbencoder-lib'
+version = '1.0.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("one.util:streamex:0.6.8")
+    testImplementation("junit:junit:4.12") {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0")
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': archivesBaseName,
+                'Implementation-Version': project.version)
+    }
+}
