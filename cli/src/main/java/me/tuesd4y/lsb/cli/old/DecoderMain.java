@@ -1,5 +1,7 @@
-import encoder.Decoder;
-import encoder.LsbDecoder;
+package me.tuesd4y.lsb.cli.old;
+
+import me.tuesd4y.lsb.encoder.Decoder;
+import me.tuesd4y.lsb.encoder.LsbDecoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

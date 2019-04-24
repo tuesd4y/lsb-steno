@@ -1,4 +1,4 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 public class ByteHelper {
     public static boolean getBitAtIndex(byte[] data, int i) {
         byte b = data[i / 8];

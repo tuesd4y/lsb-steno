@@ -1,4 +1,5 @@
 import encoder.*;
+import me.tuesd4y.lsb.encoder.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -6,7 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.core.Is.is;
@@ -32,8 +32,8 @@ public class LsbTest {
     @Test
     public void encodeDecodeWithDifferentCharset() throws IOException, MessageTooLongException {
         //fixme currently not working...
-//        final Decoder decoder = new LsbDecoder();
-//        final Encoder encoder = new LsbEncoder();
+//        final Decoder decoder = newer LsbDecoder();
+//        final Encoder encoder = newer LsbEncoder();
 //
 //        final String textToDecode = "TestAbcDe";
 //        final Charset charset = StandardCharsets.UTF_8;

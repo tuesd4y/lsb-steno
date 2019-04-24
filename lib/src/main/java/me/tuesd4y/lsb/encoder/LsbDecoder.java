@@ -1,7 +1,7 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 
 
-import image.EncodedImage;
+import me.tuesd4y.lsb.image.EncodedImage;
 
 import java.awt.image.BufferedImage;
 import java.nio.charset.Charset;

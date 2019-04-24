@@ -1,6 +1,6 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 
-import image.Pixel;
+import me.tuesd4y.lsb.image.Pixel;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -8,7 +8,7 @@ import java.awt.image.WritableRaster;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static encoder.ByteHelper.setLsb;
+import static me.tuesd4y.lsb.encoder.ByteHelper.setLsb;
 
 public class LsbEncoder implements Encoder {
 

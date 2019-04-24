@@ -1,6 +1,6 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 
-import image.Pixel;
+import me.tuesd4y.lsb.image.Pixel;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;

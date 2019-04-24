@@ -1,4 +1,4 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 
 
 import java.awt.image.BufferedImage;

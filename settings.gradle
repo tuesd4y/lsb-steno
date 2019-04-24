@@ -1,4 +1,5 @@
 rootProject.name = 'lsbencoder'
 include 'lib'
 include 'cli'
+include 'lzwCompressor'
 

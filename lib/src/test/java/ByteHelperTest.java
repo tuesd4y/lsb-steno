@@ -1,4 +1,4 @@
-import encoder.ByteHelper;
+import me.tuesd4y.lsb.encoder.ByteHelper;
 import matchers.CustomMatchers;
 import org.junit.Test;
 

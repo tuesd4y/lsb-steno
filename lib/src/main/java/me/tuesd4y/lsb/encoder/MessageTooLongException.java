@@ -1,4 +1,4 @@
-package encoder;
+package me.tuesd4y.lsb.encoder;
 
 public class MessageTooLongException extends Exception {
     public MessageTooLongException() {

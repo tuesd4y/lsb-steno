@@ -1,8 +1,6 @@
-package image;
+package me.tuesd4y.lsb.image;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

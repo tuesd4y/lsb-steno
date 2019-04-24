@@ -1,4 +1,4 @@
-package image;
+package me.tuesd4y.lsb.image;
 
 import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
